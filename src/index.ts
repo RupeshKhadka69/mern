@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import dbConnect from "./config/config";
 import userRoutes from "./userRoutes/authRoutes";
-// import { notFound, errorHandler } from "./middleware/errorHandler";
+import { notFound, errorHandler } from "./middleware/errorHandler";
 dotenv.config();
 
 const app: Express = express();
@@ -13,7 +13,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 // app.use(notFound);
 // app.use(errorHandler);
-app.use("/api/register", userRoutes);
+app.use("/api/user", userRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });

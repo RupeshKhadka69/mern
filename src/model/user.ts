@@ -1,14 +1,17 @@
 import mongoose, { Schema, Document } from "mongoose";
+import bcrypt from 'bcryptjs'
 export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
+  comparePassword(password: string): Promise<boolean>;
 }
 
 export const userSchema = new Schema({
   name: { type: String, require: true },
   email: { type: String, require: true, unique: true },
   password: { type: String, require: true },
+
 });
 
 
