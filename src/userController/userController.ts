@@ -1,6 +1,7 @@
 import User,{IUser} from "../model/user";
 import { comparePassword,hashPassword } from "../utils/comparePassword";
 import { Request, Response, NextFunction } from "express";
+import generateToken from "../utils/generateToken";
 // this is the route for register user
 const registerUser = async (req:Request, res:Response, next:NextFunction) => {
   const { name, password, email } = req.body;
@@ -13,6 +14,7 @@ const registerUser = async (req:Request, res:Response, next:NextFunction) => {
     const newHashPassword = await hashPassword(password);
     const newUser = new User({ name, password: newHashPassword, email });
     await newUser.save();
+    generateToken(res,newUser)
     res.status(201).json({
       message: "Registration successful",
       user: {
@@ -52,5 +54,7 @@ const authUser = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
+
+// const getUserProfile = 
 
 export { registerUser,authUser };
