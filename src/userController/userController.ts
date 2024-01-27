@@ -2,6 +2,10 @@ import User,{IUser} from "../model/user";
 import { comparePassword,hashPassword } from "../utils/comparePassword";
 import { Request, Response, NextFunction } from "express";
 import generateToken from "../utils/generateToken";
+
+interface AuthenticatedRequest extends Request {
+  user?: IUser;
+}
 // this is the route for register user
 const registerUser = async (req:Request, res:Response, next:NextFunction) => {
   const { name, password, email } = req.body;
@@ -54,7 +58,31 @@ const authUser = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
+const getProfile = async (req: Request, res: Response, next: NextFunction)=> {
+  const user = (req as AuthenticatedRequest).user;
+
+  // Ensure that the user is defined before accessing its properties
+  if (!user) {
+      return res.status(401).json({ message: "User not authenticated" });
+  }
+
+  // Return user profile data
+  res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+  });
+
+}
+
+const logoutUser = async (req: Request, res: Response, next: NextFunction)=> {
+     res.cookie('jwtauth',"",{
+      httpOnly: true,
+      expires: new Date(0)
+     })
+   res.status(200).json({message: "log out sucessful"})  
+}
 
 // const getUserProfile = 
 
-export { registerUser,authUser };
+export { registerUser,authUser,getProfile,logoutUser };
