@@ -20,7 +20,6 @@ const generateToken = (res:Response,userId:NewUserType) => {
         secure:process.env.NODE_ENV != "development",
         sameSite: "strict",
         maxAge: 30 *24*60*60*1000
-
     })
 
 }
