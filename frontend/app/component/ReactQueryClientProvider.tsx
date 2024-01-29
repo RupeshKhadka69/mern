@@ -2,7 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { useState } from 'react'
-
+import { AuthProvider } from '@/app/utils/authProvider'
 export const ReactQueryClientProvider = ({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(
     () =>
@@ -16,5 +16,5 @@ export const ReactQueryClientProvider = ({ children }: { children: React.ReactNo
         },
       })
   )
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  return <AuthProvider><QueryClientProvider client={queryClient}>{children}</QueryClientProvider></AuthProvider>
 }

@@ -1,17 +1,16 @@
 "use client"
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
-// import client from '@/app/lib/queryClient'; // Assuming this file exports the QueryClient instance
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
-    // const client = new QueryClient();
-
+const router = useRouter();
     type RegisterForm = {
         name: string;
         email: string;
@@ -26,6 +25,7 @@ const Register = () => {
                 setName('');
                 setEmail('');
                 setPassword('');
+                router.push('/user/signin')
             },
             onError: () => {
                 toast.error('Registration failed');
@@ -39,9 +39,8 @@ const Register = () => {
     };
 
     return (
-        // <QueryClientProvider client={client} contextSharing={true}>
             <div className='flex h-screen flex-col items-center justify-center'>
-                <h2 className='text-xl'>Login Form</h2>
+                <h2 className='text-xl'>sign up</h2>
                 <form onSubmit={handleSubmit} className='w-[400px]'>
                     <div className='m-2 grid items-center content-center'>
                         <label className='text-sm'>Name</label>
@@ -59,7 +58,6 @@ const Register = () => {
                 </form>
                 <ToastContainer />
             </div>
-        // </QueryClientProvider>
     );
 };
 
