@@ -1,31 +1,57 @@
-
-// ProfilePage.tsx
 "use client"
-// ProfilePage.tsx
-
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
-import { useAuth } from '@/app/utils/authProvider';
-
-const ProfilePage = () => {
-  const { user } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!user) {
-      router.push('/user/register');
-    }
-  }, [user, router]);
-
-  if (!user) {
-    return null;
+// Define the type for user data
+// Define the type for user data
+import { getUserFromLocalStorage } from '@/app/lib/getUser';
+interface UserData {
+    name: string;
+    email: string;
+    // Add other properties as needed
   }
-
-  return (
-    <div>
-      <div>{user.name}</div>
-    </div>
-  );
-};
-
-export default ProfilePage;
+  
+  const ProfilePage = () => {
+    const router = useRouter();
+    const [user, setUser] = useState<UserData|string | null>(null);
+  
+    useEffect(() => {
+      const userInfoString = getUserFromLocalStorage();
+    //  console.log(userInfoString.n);
+     
+      
+      if (userInfoString) {
+        try {
+            setUser(userInfoString);
+          
+          setUser(userInfoString);
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+          router.push('/user/signin');
+        }
+      } else {
+        router.push('/user/signin');
+      }
+    }, [router]);
+  
+    if (!user) {
+      return null;
+    }
+  
+    return (
+      <div>
+       {typeof user === 'string' ? (
+      // Render loading state or redirect message
+      <p>Loading...</p>
+    ) : (
+      // Render profile data
+      <>
+        <h1>Welcome, {user.name}</h1>
+        <p>Email: {user.email}</p>
+        {/* Render other profile information */}
+      </>
+    )}
+      </div>
+    );
+  };
+  
+  export default ProfilePage;

@@ -2,34 +2,39 @@
 // Login.tsx
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useMutation } from 'react-query';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from '@/app/utils/authProvider';
-
+import { login } from '@/app/utils/authProvider';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { user, login } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    if (user) {
+  const loginMutation = useMutation(login, {
+    onSuccess: async () => {
+      toast.success('Login successful');
       router.push('/user/profile');
-    }
-  }, [user, router]);
+    },
+    onError: (error) => {
+      toast.error('Login failed. Please check your credentials and try again.');
+      console.error('Login error:', error);
+    },
+  });
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/user/auth', { email, password });
-      toast.success('Login successful');
-      await login({ email, password });
-      router.push('/user/profile');
+      toast.success("successful")
+      loginMutation.mutate({ email, password });
+       
+      // router.push('/user/profile'); // Adjust the route accordingly
     } catch (error) {
-      console.error('Login failed:', error);
-      toast.error('Login failed');
+      // Handle login errors
+      toast.error('Login failed. Please check your credentials and try again.');
+      console.error('Login error:', error);
     }
   };
 

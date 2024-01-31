@@ -1,7 +1,6 @@
 // api.js
 
 import axios from 'axios';
-
 const API_URL = 'http://localhost:8000/api/user';
 type userData = {
     name?: string,
@@ -9,7 +8,7 @@ type userData = {
     password: string 
 }
 export const registerUser = async (userData:userData) => {
-  return axios.post(`${API_URL}/`, userData);
+  return axios.post(`${API_URL}/`, userData).then((response)=> response.data);
 };
 
 export const loginUser = async (credentials:userData) => {
@@ -17,6 +16,7 @@ export const loginUser = async (credentials:userData) => {
 };
 
 export const getUserProfile = async () => {
+  
   return axios.get(`${API_URL}/profile`);
 };
 
