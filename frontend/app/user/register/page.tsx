@@ -5,23 +5,18 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { register } from '@/app/utils/authProvider';
 const Register = () => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
 const router = useRouter();
-    type RegisterForm = {
-        name: string;
-        email: string;
-        password: string;
-    };
+  
 
-    const { mutate, isLoading } = useMutation((formData: RegisterForm) => axios.post('http://localhost:8000/api/user', formData),
+    const { mutate, isLoading } = useMutation(register, 
         {
             onSuccess: () => {
                 toast.success('Registration successful');
-                // Optionally, you can reset form fields here
                 setName('');
                 setEmail('');
                 setPassword('');
@@ -30,12 +25,18 @@ const router = useRouter();
             onError: () => {
                 toast.error('Registration failed');
             }
-        }
+        }      
     );
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await mutate({ name, email, password });
+        try {
+            toast.success("Registration sucessful");
+            mutate({name,email,password})
+        } catch (error) {
+            toast.error('registration failed.');
+            console.error('Login error:', error);
+        }
     };
 
     return (

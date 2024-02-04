@@ -1,31 +1,33 @@
 
 "use client"
 // Navbar.tsx
-
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useMutation } from 'react-query';
+import { logout } from '../utils/authProvider';
+import { toast, ToastContainer } from 'react-toastify';
+import { getUserFromLocalStorage } from '../lib/getUser';
 
-interface UserData {
-  name: string;
-  email: string;
-  // Add other properties as needed
-}
-
-interface NavbarProps {
-  user: UserData | null;
-};
-
-const Navbar: React.FC<NavbarProps> = ({ user }) => {
+const Navbar: React.FC = () => {
+  type UserData = {
+    name: string;
+    email: string;
+    // Add other properties as needed
+  };
   const router = useRouter();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-//  useEffect(() => {
-  
-//  }, [third])
- 
+  const [user, setUser] = useState<UserData | null>(getUserFromLocalStorage());
+  const [dropdownOpen, setDropdownOpen] = useState(false); // Initialize dropdownOpen state
+
+  const { mutate } = useMutation(logout, {
+    onSuccess: async () => {
+      handleLogout();
+      router.push('/');
+    },
+  });
 
   const handleLogout = async () => {
-    // Perform logout logic here
-    router.push('/');
+    setUser(null);
+    mutate();
   };
 
   const toggleDropdown = () => {
@@ -41,15 +43,8 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
             {user ? (
               <span className="mr-2">Welcome, {user.name}</span>
             ) : (
-              <span className="mr-2">Sign In</span> // Conditional rendering here
+              <span className="mr-2">Sign In</span>
             )}
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                fillRule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
           </button>
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2">
@@ -63,13 +58,13 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
               ) : (
                 <>
                   <button
-                    onClick={() => router.push('/signin')}
+                    onClick={() => router.push('user/signin')}
                     className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
                   >
                     Sign In
                   </button>
                   <button
-                    onClick={() => router.push('/register')}
+                    onClick={() => router.push('user/register')}
                     className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
                   >
                     Register
@@ -80,6 +75,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
           )}
         </div>
       </div>
+      <ToastContainer />
     </nav>
   );
 };

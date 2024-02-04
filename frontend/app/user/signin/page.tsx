@@ -1,20 +1,22 @@
 "use client"
 // Login.tsx
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation } from 'react-query';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { login } from '@/app/utils/authProvider';
+
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const loginMutation = useMutation(login, {
+  const { mutate, isLoading } = useMutation(login, {
     onSuccess: async () => {
       toast.success('Login successful');
+      
       router.push('/user/profile');
     },
     onError: (error) => {
@@ -23,16 +25,11 @@ const Login = () => {
     },
   });
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      toast.success("successful")
-      loginMutation.mutate({ email, password });
-       
-      // router.push('/user/profile'); // Adjust the route accordingly
+       mutate({ email, password }); // Await the result of mutate
     } catch (error) {
-      // Handle login errors
       toast.error('Login failed. Please check your credentials and try again.');
       console.error('Login error:', error);
     }
@@ -50,7 +47,7 @@ const Login = () => {
           <label className='text-sm'>Password</label>
           <input className='px-4 py-1 border-black border-2' value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder='Password..' />
         </div>
-        <button type='submit' className='btn border-2 border-black py-0.5'>Submit</button>
+        <button type='submit' disabled={isLoading} className='btn border-2 border-black py-0.5'>Submit</button>
       </form>
       <ToastContainer />
     </div>

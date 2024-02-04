@@ -12,11 +12,11 @@ export const ReactQueryClientProvider = ({ children }: { children: React.ReactNo
           queries: {
             // With SSR, we usually want to set some default staleTime
             // above 0 to avoid refetching immediately on the client
-            refetchOnWindowFocus: false,
-            refetchOnMount: false,
-            refetchOnReconnect: false,
-            retry: 1,
-            staleTime: 5 * 1000,
+            // refetchOnWindowFocus: false,
+            // refetchOnMount: false,
+            // refetchOnReconnect: false,
+            // retry: 1,
+            // staleTime: 5 * 1000,
           },
         },
       })

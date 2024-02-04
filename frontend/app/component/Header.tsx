@@ -1,16 +1,11 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Navbar from './navbar';
-import { getUserFromLocalStorage } from '../lib/getUser';
 
-const Header = () => {
-  const [userName, setUserName] = useState<string | null>(null);
-  const user = getUserFromLocalStorage();
-
-
+const Header: React.FC = () => {
   return (
     <div>
-      <Navbar user={user}  />
+      <Navbar /> {/* No need to pass props */}
     </div>
   );
 };
